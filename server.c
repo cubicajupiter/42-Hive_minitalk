@@ -1,4 +1,4 @@
-char		*result_str;
+char		*g_result_str;
 
 int	main()
 {
@@ -21,8 +21,8 @@ int	main()
 void	ft_signal_handler(int signum)
 {
 	static unsigned char	built_chara;
-	static int				n_bit;
-	static int				str_len;
+	static int		n_bit;
+	static int		str_len;
 
 	if (signum == SIGUSR1)
 		built_chara |= (1 << n_bit); // 1
@@ -46,7 +46,7 @@ void	ft_signal_handler(int signum)
 
 void	char_to_str(int len, unsigned char chara)
 {
-	int		i;
+	int	i;
 	char	*new_str;
 	char	*old_str;
 
@@ -60,7 +60,7 @@ void	char_to_str(int len, unsigned char chara)
 	}
 	new_str[i++] = chara;
 	new_str[i] = '\0';
-	result_str = new_str;
+	g_result_str = new_str;
 	free(old_str);
 }
 
