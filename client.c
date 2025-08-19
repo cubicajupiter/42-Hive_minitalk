@@ -1,11 +1,15 @@
-#include "miniheader.h"
+
+# include "includes/client.h"
+# include <unistd.h>
+# include <sys/types.h>
+# include <signal.h>
 
 int	main(int argc, char **argv)
 {
 	pid_t	serv_pid;
 	char	*string;
 
-	if (argc = 3)
+	if (argc == 3)
 	{
 		serv_pid = (pid_t) ft_atoi(argv[1]);
 		if (!serv_pid)
@@ -31,6 +35,7 @@ int	main(int argc, char **argv)
 int		signaler(pid_t serv_pid, char *string)
 {
 	int		chara;
+	int		j;
 
 	chara = 0;
 	while (string[chara])
@@ -38,14 +43,14 @@ int		signaler(pid_t serv_pid, char *string)
 		j = 0;
 		while (j < 8)
 		{
-			if (send_bit((unsigned char)string[chara], j));
+			if (send_bit((unsigned char)string[chara], j, serv_pid))
 				return (ERROR);
 			usleep(50);
 			j++;
 		}
 		chara++;
 	}
-	if (end_of_message(serv_pid));
+	if (end_of_message(serv_pid))
 		return (ERROR);
 	return (0);
 }
@@ -57,7 +62,7 @@ int		end_of_message(pid_t serv_pid)
 	i = 0;
 	while (i < 8)
 	{
-		if (kill(serv_pid, SIGUSR2));
+		if (kill(serv_pid, SIGUSR2))
 			return (ERROR);
 		usleep(50);
 		i++;
@@ -65,7 +70,7 @@ int		end_of_message(pid_t serv_pid)
 	return (0);
 }
 
-int		send_bit(unsigned char chara, int j)
+int		send_bit(unsigned char chara, int j, pid_t serv_pid)
 {
 	if ((chara >> j) & 1)
 	{

@@ -1,6 +1,9 @@
+
+# include "includes/server.h"
+
 char		*g_result_str;
 
-int	main()
+int	main(void)
 {
 	struct sigaction	handler;
 
@@ -16,6 +19,7 @@ int	main()
 		if (sigaction(SIGUSR2, &handler, NULL) == -1)
 			return (ERROR);
 	}
+	return (0);
 }
 
 void	ft_signal_handler(int signum)

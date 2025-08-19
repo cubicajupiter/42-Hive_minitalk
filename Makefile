@@ -10,53 +10,40 @@
 #                                                                              #
 # **************************************************************************** #
 
-NAME			= _______________
+NAME_C			= client
 
-SRCS			= _______________.c
-OBJS			= $(SRCS:%.c=%.o)
+NAME_S			= server
 
-HEADER			= _______________.h
+SRCS_C			= client.c
+OBJS_C			= $(SRCS_C:%.c=%.o)
 
-LIBFT_PATH		= $(LIBFT_DIR)/libft.a
-LIBFT_DIR		= libft
-
-MLX_PATH		= $(MLX_DIR)/libmlx_Linux.a
-MLX_DIR			= ../../mlx_linux
-
-PRINTF_PATH		= $(PRINTF_DIR)/libftprintf.a
-PRINTF_DIR		= printf
-
-ARCHIVES		= $(LIBFT_A) $(MLX_PATH) $(PRINTF_PATH)
+SRCS_S			= server.c
+OBJS_S			= $(SRCS_S:%.c=%.o)
 
 COMPILER		= cc
 CFLAGS			= -Wall -Wextra -Werror
-INCLUDE_LIBFT		= -I $(LIBFT_PATH)
-INCLUDE_MLX		= -I $(MLX_PATH) -O3 -c $< -o $@
+
+INCLUDE			= -Ift
 
 RM			= rm -f
 
-all:			$(NAME)
+all:			$(NAME_C) $(NAME_S)
 
-$(LIBFT_A):
-				make -C $(LIBFT_PATH)
+$(NAME_C):		$(OBJS_C)
 
-$(NAME):		$(OBJS) $(ARCHIVES)
-				cp $(LIBFT_A) $(NAME)
-				ar -rcs $(NAME) $(OBJS)
+$(NAME_S):		$(OBJS_S)
 
-%.o:			%.c $(HEADER)
+%.o:			%.c
 				@echo "Compiling $<"
-				$(COMPILER) $(CFLAGS) $(INCLUDE_) -c $< -o $@
+				$(COMPILER) $(CFLAGS) $(INCLUDE) -c $< -o $@
 
 clean:
-				@echo "Cleaning object files in parent and libft"
+				@echo "Cleaning object files"
 				@$(RM) $(OBJS)
-				make clean -C $(LIBFT_PATH)
 
 fclean:			clean
-				@echo "Cleaning library in parent and libft"
+				@echo "Cleaning executables & object files"
 				@$(RM) $(NAME)
-				make fclean -C $(LIBFT_PATH)
 
 re:				fclean all
 
