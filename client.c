@@ -1,8 +1,5 @@
 
 # include "includes/client.h"
-# include <unistd.h>
-# include <sys/types.h>
-# include <signal.h>
 
 int	main(int argc, char **argv)
 {
@@ -45,7 +42,7 @@ int		signaler(pid_t serv_pid, char *string)
 		{
 			if (send_bit((unsigned char)string[chara], j, serv_pid))
 				return (ERROR);
-			usleep(50);
+			usleep(100);
 			j++;
 		}
 		chara++;
@@ -72,15 +69,19 @@ int		end_of_message(pid_t serv_pid)
 
 int		send_bit(unsigned char chara, int j, pid_t serv_pid)
 {
-	if ((chara >> j) & 1)
+	if ((chara >> j) & 1) //1
 	{
-		if (kill(serv_pid, SIGUSR1))
-			return (ERROR);
+		if (kill(serv_pid, 0))
+			kill(serv_pid, SIGUSR1);
+		else
+			ft_printf("Process %d does not exist, or PID is wrong.", serv_pid);
 	}
-	else if ((!(chara >> j) & 1))
+	else if (!((chara >> j) & 1)) //0
 	{
-		if (kill(serv_pid, SIGUSR2))
-			return (ERROR);
+		if (kill(serv_pid, 0))
+			kill(serv_pid, SIGUSR2);
+		else
+			ft_printf("Process %d does not exist, or PID is wrong.", serv_pid);
 	}
 	return (0);
 }

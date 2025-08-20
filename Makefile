@@ -23,27 +23,34 @@ OBJS_S			= $(SRCS_S:%.c=%.o)
 COMPILER		= cc
 CFLAGS			= -Wall -Wextra -Werror
 
-INCLUDE			= -Ift
+PRINTF_A		= $(PRINTF_PATH)/libftprintf.a
+PRINTF_PATH		= includes/printf
+INCLUDE			= -I $(PRINTF_PATH)
 
 RM			= rm -f
 
 all:			$(NAME_C) $(NAME_S)
 
-$(NAME_C):		$(OBJS_C)
+$(PRINTF_A):	
+			make -C $(PRINTF_PATH)
 
-$(NAME_S):		$(OBJS_S)
+$(NAME_C):		$(OBJS_C) $(PRINTF_A)
+
+$(NAME_S):		$(OBJS_S) $(PRINTF_A)
 
 %.o:			%.c
 				@echo "Compiling $<"
-				$(COMPILER) $(CFLAGS) $(INCLUDE) -c $< -o $@
+				$(COMPILER) $(CFLAGS) $(INCLUDE) -c $< -o $@ -g
 
 clean:
 				@echo "Cleaning object files"
-				@$(RM) $(OBJS)
+				@$(RM) $(OBJS_C) $(OBJS_S)
+				make clean -C $(PRINTF_PATH)
 
 fclean:			clean
 				@echo "Cleaning executables & object files"
-				@$(RM) $(NAME)
+				@$(RM) $(NAME_C) $(NAME_S)
+				make fclean -C $(PRINTF_PATH)
 
 re:				fclean all
 

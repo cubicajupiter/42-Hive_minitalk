@@ -9,11 +9,11 @@ int	main(void)
 
 	ft_printf("Server's PID: %d", getpid());
 	handler.sa_handler = ft_signal_handler;
-	while (1)
+	if (sigemptyset(&handler.sa_mask) == -1)
+		return (ERROR);
+	while (1) //prolly a problem with this loop
 	{
 		pause();
-		if (sigemptyset(&handler.sa_mask) == -1)
-			return (ERROR);
 		if (sigaction(SIGUSR1, &handler, NULL) == -1)
 			return (ERROR);
 		if (sigaction(SIGUSR2, &handler, NULL) == -1)
@@ -37,7 +37,7 @@ void	ft_signal_handler(int signum)
 	{
 		str_len++;
 		if (built_chara)
-			char_to_str(str, str_len, built_chara);
+			char_to_str(str_len, built_chara);
 		else
 		{
 			putstr_and_free();
@@ -56,7 +56,7 @@ void	char_to_str(int len, unsigned char chara)
 
 	i = 0;
 	new_str = malloc(len * sizeof(char));
-	old_str = result_str;
+	old_str = g_result_str;
 	while (i < len && old_str)
 	{
 		new_str[i] = old_str[i];
@@ -70,7 +70,7 @@ void	char_to_str(int len, unsigned char chara)
 
 void	putstr_and_free()
 {
-	ft_printf("%s", result_str);
-	free(result_str);
-	result_str = NULL;
+	ft_printf("%s", g_result_str);
+	free(g_result_str);
+	g_result_str = NULL;
 }
