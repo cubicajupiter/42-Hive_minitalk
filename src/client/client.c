@@ -1,5 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   client.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/27 09:58:19 by jvalkama          #+#    #+#             */
+/*   Updated: 2025/08/27 10:08:51 by jvalkama         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-# include "client.h"
+#include "client.h"
 
 int		g_acknowledged;
 
@@ -13,22 +24,24 @@ int	main(int argc, char **argv)
 		serv_pid = (pid_t) ft_atoi(argv[1]);
 		if (!serv_pid)
 		{
-			write(1, "Faulty Process ID argument.", 27);
+			write(1, "Faulty Process ID argument.\n", 28);
 			return (ERROR);
 		}
 		string = argv[2];
 		if (string[0] == 0)
 		{
-			write(1, "Faulty message argument.", 24);
+			write(1, "Faulty message argument.\n", 25);
 			return (ERROR);
 		}
 		if (ft_signaler(serv_pid, string))
 			return (ERROR);
 	}
+	else
+		write(1, "Need two arguments: <Server process ID> <String>\n", 49);
 	return (0);
 }
 
-int		ft_signaler(pid_t serv_pid, char *string)
+int	ft_signaler(pid_t serv_pid, char *string)
 {
 	int					chara;
 	int					j;
@@ -57,7 +70,7 @@ int		ft_signaler(pid_t serv_pid, char *string)
 	return (0);
 }
 
-int		ft_end_of_message(pid_t serv_pid)
+int	ft_end_of_message(pid_t serv_pid)
 {
 	int		i;
 
@@ -66,7 +79,7 @@ int		ft_end_of_message(pid_t serv_pid)
 	{
 		if (kill(serv_pid, 0))
 		{
-			ft_printf("Process %d does not exist, PID is wrong, or no permission.\n", serv_pid);
+			ft_printf("PID %d is wrong or bad permissions\n", serv_pid);
 			return (ERROR);
 		}
 		g_acknowledged = 0;
@@ -78,23 +91,23 @@ int		ft_end_of_message(pid_t serv_pid)
 	return (0);
 }
 
-int		ft_send_bit(unsigned char chara, int j, pid_t serv_pid)
+int	ft_send_bit(unsigned char chara, int j, pid_t serv_pid)
 {
 	g_acknowledged = 0;
-	if ((chara >> j) & 1) //1
+	if ((chara >> j) & 1)
 	{
 		if (kill(serv_pid, 0))
 		{
-			ft_printf("Process %d does not exist, PID is wrong, or no permission.\n", serv_pid);
+			ft_printf("PID %d is wrong or bad permissions\n", serv_pid);
 			return (ERROR);
 		}
 		kill(serv_pid, SIGUSR1);
 	}
-	else if (!((chara >> j) & 1)) //0
+	else if (!((chara >> j) & 1))
 	{
 		if (kill(serv_pid, 0))
 		{
-			ft_printf("Process %d does not exist, PID is wrong, or no permission.\n", serv_pid);
+			ft_printf("PID %d is wrong or bad permissions\n", serv_pid);
 			return (ERROR);
 		}
 		kill(serv_pid, SIGUSR2);
